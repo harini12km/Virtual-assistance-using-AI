@@ -1,0 +1,43 @@
+import pyaudio
+import wave
+
+# Set parameters for recording
+FORMAT = pyaudio.paInt16  # Audio format (16-bit PCM)
+CHANNELS = 1              # Number of audio channels (1 for mono, 2 for stereo)
+RATE = 44100              # Sample rate (samples per second)
+CHUNK = 1024              # Number of frames per buffer
+
+# Initialize PyAudio
+audio = pyaudio.PyAudio()
+
+# Open audio stream
+stream = audio.open(format=FORMAT,
+                    channels=CHANNELS,
+                    rate=RATE,
+                    input=True,
+                    frames_per_buffer=CHUNK)
+
+print("Recording...")
+
+frames = []
+
+# Record audio
+for i in range(int(RATE / CHUNK * 5)):  # Record for 5 seconds
+    data = stream.read(CHUNK)
+    frames.append(data)
+
+print("Recording finished.")
+
+# Stop and close the stream
+stream.stop_stream()
+stream.close()
+audio.terminate()
+
+# Save recorded audio to a file
+with wave.open("recorded_audio.wav", "wb") as wf:
+    wf.setnchannels(CHANNELS)
+    wf.setsampwidth(audio.get_sample_size(FORMAT))
+    wf.setframerate(RATE)
+    wf.writeframes(b"".join(frames))
+
+print("Audio saved to recorded_audio.wav")
