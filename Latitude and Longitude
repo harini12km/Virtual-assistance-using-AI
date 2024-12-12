@@ -1,0 +1,21 @@
+import geocoder
+
+def get_location():
+    # Use the geocoder library to get the location based on the IP address
+    location = geocoder.ip('me')
+    
+    # Extract latitude and longitude from the location data
+    latitude, longitude = location.latlng
+    
+    return latitude, longitude
+
+def main():
+    # Get the current location
+    latitude, longitude = get_location()
+    
+    # Print the latitude and longitude
+    print("Latitude:", latitude)
+    print("Longitude:", longitude)
+
+if __name__ == "__main__":
+    main()
